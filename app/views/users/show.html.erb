@@ -1,0 +1,128 @@
+<div class="navbar">
+  <div class="navbar-inner">
+  	<a class="brand" href="#">Welcome, <%= current_user.first_name %></a>
+    <ul class="nav pull-right">
+      <li class="divider-vertical"></li>
+      <li><%= link_to "Log Out", logout_url, :method => :delete %></li>
+    </ul>
+  </div>
+</div>
+
+<% if current_user == @user %>
+	<!-- new/edit product form: an use a partial for this? -->
+	<!-- For now: get 'new' form working, *then* figure out 'edit' -->
+	<div id="product_form">
+		<h4 class="text-left">Sell Product</h4>
+		<%= simple_form_for @product,
+							:url => user_products_url(current_user),
+							:html => { :class => "border-silver margin10 padding10 span3" } do |f| %>
+			<%= f.input :brand %>
+			<%= f.input :model %>
+			<%= f.input :amount %>
+			<%= f.submit 'Sell', :class => "btn btn-primary" %>
+		<% end %>
+	</div>
+
+	<!-- Unsold Product table -->
+	<table class="table table-bordered table-condensed margin10">
+		<caption class="text-left">Products for Sale:</caption>
+		<thead>
+			<tr>
+        <th>Product</th>
+        <th>Date Posted</th>
+        <th>Amount</th>
+        <th>Action</th>
+			</tr>
+		</thead>
+    <tbody>
+      <% @available_products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= product.created_at.strftime("%m/%d/%Y") %></td>
+          <td><%= product.amount.to_digits %></td>
+          <td>
+          	<!-- TODO: for 'edit': redirect_to page with edit form in div#product_form? Or is there a better way without redirect (without reloading?) -->
+          	<%= link_to "Remove", user_product_url(current_user, product),
+          			:confirm => "Are you sure you want to remove #{product.name}?",
+          			:method => :delete %>
+          	<%= link_to "Edit", edit_user_product_url(current_user, product) %>
+          </td>
+        </tr>
+      <% end %><!-- end @sales.each -->
+    </tbody>
+  </table>
+	<!-- Sold Product table -->
+	<table class="table table-bordered table-condensed margin10">
+		<caption class="text-left">Sales</caption>
+		<thead>
+			<tr>
+        <th>Product</th>
+        <th>Date Sold</th>
+        <th>Buyer</th>
+        <th>Amount</th>
+			</tr>
+		</thead>
+    <tbody>
+      <% @sales.each do |sale| %>
+        <tr>
+          <td><%= sale.name %></td>
+          <td><%= sale.updated_at.strftime("%m/%d/%Y") %></td>
+          <td><%= link_to "#{sale.buyer.name}", user_url(sale.buyer) %></td>
+          <td><%= sale.amount.to_digits %></td>
+        </tr>
+      <% end %><!-- end @sales.each -->
+    </tbody>
+  </table>
+	<!-- Purchased Product table -->
+	<table class="table table-bordered table-condensed margin10">
+		<caption class="text-left">Purchases</caption>
+		<thead>
+			<tr>
+        <th>Product</th>
+        <th>Date Bought</th>
+        <th>Seller</th>
+        <th>Amount</th>
+			</tr>
+		</thead>
+    <tbody>
+      <% @purchases.each do |purchase| %>
+        <tr>
+          <td><%= purchase.name %></td>
+          <td><%= purchase.updated_at.strftime("%m/%d/%Y") %></td>
+          <td><%= link_to "#{purchase.seller.name}", user_url(purchase.seller)  %></td>
+          <td><%= purchase.amount.to_digits %></td>
+        </tr>
+      <% end %><!-- end @purchases.each -->
+    </tbody>
+  </table>
+<% else %>
+	<!-- products for sale by @user -->
+	<table class="table table-bordered table-condensed margin10">
+		<caption class="text-left"><%= @user.name %>'s Products</caption>
+		<thead>
+			<tr>
+        <th>Product</th>
+        <th>Date Posted</th>
+        <th>Amount</th>
+        <th>Action</th>
+			</tr>
+		</thead>
+    <tbody>
+      <% @available_products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= product.created_at.strftime("%m/%d/%Y") %></td>
+          <td><%= product.amount.to_digits %></td>
+          <td>
+          	<%= form_for product,
+          							:url => user_product_url(@user, product)  do |f| %>
+          		<%= f.hidden_field :buyer_id,
+          								:value => current_user.id %>
+          		<%= f.submit 'Buy', :class => "btn btn-link" %>
+          	<% end %>
+          </td>
+        </tr>
+      <% end %><!-- end @products.each -->
+    </tbody>
+  </table>
+<% end %>
