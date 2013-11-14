@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  brand: 
+  model: 
+  amount: 
+  seller: 
+  buyer_id: 
+
+two:
+  brand: 
+  model: 
+  amount: 
+  seller: 
+  buyer_id: 
