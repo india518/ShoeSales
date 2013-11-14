@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= yield :title %></title>
+  <%= stylesheet_link_tag    "sessions", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "sessions", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<% if flash[:notice] %>
+	<p class="alert alert-info">><%= flash[:notice] %></p>
+<% elsif flash[:alert] %>
+	<p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
+<%= yield %>
+
+</body>
+</html>
