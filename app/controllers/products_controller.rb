@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
 
 	def index
-		@products = Product.includes(:user).where(:buyer_id => nil)
+		@products = Product.includes(:seller).where(:buyer_id => nil)
 	end
 
 	def create
