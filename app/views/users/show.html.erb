@@ -19,19 +19,21 @@
 <div class="clearfix"></div>
 
 <% if current_user == @user %>
-	<!-- new/edit product form: an use a partial for this? -->
-	<!-- For now: get 'new' form working, *then* figure out 'edit' -->
 	<div id="product_form">
 		<h4 class="text-left">Sell Product</h4>
+
 		<%= simple_form_for @product,
-							:url => products_url,
 							:html => { 
                 :class => "border-silver margin10 padding10 col-xs-3"
               } do |f| %>
 			<%= f.input :brand %>
 			<%= f.input :model %>
 			<%= f.input :amount %>
-			<%= f.submit 'Sell', :class => "btn btn-primary" %>
+      <% if @product.id.nil? %>
+		    <%= f.submit 'Sell', :class => "btn btn-primary" %>
+      <% else %>
+        <%= f.submit 'Update', :class => "btn btn-primary" %>
+      <% end %>
 		<% end %>
 	</div>
 
@@ -54,11 +56,15 @@
             <td><%= product.created_at.strftime("%m/%d/%Y") %></td>
             <td><%= product.amount.to_digits %></td>
             <td>
-            	<!-- TODO: for 'edit': redirect_to page with edit form in div#product_form? Or is there a better way without redirect (without reloading?) -->
             	<%= link_to "Remove", product_url(product),
             			:confirm => "Are you sure you want to remove #{product.name}?",
             			:method => :delete %>
-            	<%= link_to "Edit", edit_product_url(product) %>
+              <%= form_for product,
+                  :method => :post,
+                  :url => user_url(current_user)  do |f| %>
+                <%= f.hidden_field :id, :value => product.id %>
+                <%= f.submit 'Edit', :class => "btn btn-link" %>
+              <% end %>
             </td>
           </tr>
         <% end %><!-- end @sales.each -->

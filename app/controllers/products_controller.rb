@@ -15,15 +15,25 @@ class ProductsController < ApplicationController
 
 	def update
 		@product = Product.find(params[:id])
-		@product.buyer_id = params[:product][:buyer_id]
-		#QUESTION: Should above line be this instead:
-		#@product.buyer_id = current_user
-		if @product.save
-			redirect_to user_url(current_user),
-				:notice => "#{@product.name} purchased!"
-		else
-			redirect_to user_url(current_user),
-				:alert => "Unable to complete purchase of #{@product.name}."
+
+		if params[:product][:action] == "purchase"
+			@product.buyer_id = current_user
+			if @product.save
+				redirect_to user_url(current_user),
+					:notice => "#{@product.name} purchased!"
+			else
+				redirect_to user_url(current_user),
+					:alert => "Unable to complete purchase of #{@product.name}."
+			end
+		else	#we're just updating product information
+			@product.update(product_params)
+			if @product.save
+				redirect_to user_url(current_user),
+					:notice => "#{@product.name} updated."
+			else
+				redirect_to user_url(current_user),
+					:alert => "Unable to update this product."
+			end
 		end
 	end
 

@@ -7,7 +7,9 @@ ShoeSales::Application.routes.draw do
   delete "/logout", :to => 'sessions#destroy'
 
   resources :users, :only => [:new, :create, :show]
-  resources :products, :only => [:index, :create, :edit, :update, :destroy]
+  post "/users/:id", :to => 'users#show'	#post for product 'edit' function
+
+  resources :products, :only => [:index, :create, :update, :destroy]
 
   root :to => 'sessions#new'
 end

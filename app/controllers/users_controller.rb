@@ -18,7 +18,8 @@ class UsersController < ApplicationController
 		@user = User.find(params[:id])
 		@available_products = @user.available
 		if current_user == @user
-			@product = Product.new
+			@product = Product.find(params[:product][:id]) if params[:product]
+			@product ||= Product.new
 			@sales = @user.sales
 			@purchases = @user.purchases
 		end
