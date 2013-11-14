@@ -1,5 +1,9 @@
 class ProductsController < ApplicationController
 
+	def index
+		@products = Product.includes(:user).where(:buyer_id => nil)
+	end
+
 	def create
 		@product = current_user.products.new(product_params)
 		if @product.save

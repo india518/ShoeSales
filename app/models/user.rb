@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 	end
 
 	def sales
-		self.products.where("buyer_id IS NOT NULL")
+		self.products.where.not(:buyer_id => nil)
 	end
 
 	def available
