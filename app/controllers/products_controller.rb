@@ -10,6 +10,15 @@ class ProductsController < ApplicationController
 	end
 
 	def update
+		@product = Product.find(params[:id])
+		@product.buyer_id = params[:product][:buyer_id]
+		if @product.save
+			redirect_to user_url(current_user),
+				:notice => "#{@product.name} purchased!"
+		else
+			redirect_to user_url(current_user),
+				:alert => "Unable to complete purchase of #{@product.name}."
+		end
 	end
 
 	def destroy
