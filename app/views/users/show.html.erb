@@ -10,6 +10,8 @@
   </div>
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav navbar-right">
+      <li><%= link_to "Available Shoes", products_url %></li>
+     <!--  <li class="divider-vertical"></li> -->
       <li><%= link_to "Log Out", logout_url, :method => :delete %></li>
     </ul>
   </div>
@@ -22,7 +24,7 @@
 	<div id="product_form">
 		<h4 class="text-left">Sell Product</h4>
 		<%= simple_form_for @product,
-							:url => user_products_url(current_user),
+							:url => products_url,
 							:html => { 
                 :class => "border-silver margin10 padding10 col-xs-3"
               } do |f| %>
@@ -53,10 +55,10 @@
             <td><%= product.amount.to_digits %></td>
             <td>
             	<!-- TODO: for 'edit': redirect_to page with edit form in div#product_form? Or is there a better way without redirect (without reloading?) -->
-            	<%= link_to "Remove", user_product_url(current_user, product),
+            	<%= link_to "Remove", product_url(product),
             			:confirm => "Are you sure you want to remove #{product.name}?",
             			:method => :delete %>
-            	<%= link_to "Edit", edit_user_product_url(current_user, product) %>
+            	<%= link_to "Edit", edit_product_url(product) %>
             </td>
           </tr>
         <% end %><!-- end @sales.each -->
@@ -134,9 +136,7 @@
             <td><%= product.amount.to_digits %></td>
             <td>
             	<%= form_for product,
-            							:url => user_product_url(@user, product)  do |f| %>
-            		<%= f.hidden_field :buyer_id,
-            								:value => current_user.id %>
+            							:url => product_url(product)  do |f| %>
             		<%= f.submit 'Buy', :class => "btn btn-link" %>
             	<% end %>
             </td>

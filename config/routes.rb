@@ -6,9 +6,8 @@ ShoeSales::Application.routes.draw do
   post "/login", :to => 'sessions#create'
   delete "/logout", :to => 'sessions#destroy'
 
-  resources :users do
-    resources :products
-  end
+  resources :users, :only => [:new, :create, :show]
+  resources :products, :only => [:index, :create, :edit, :update, :destroy]
 
   root :to => 'sessions#new'
 end

@@ -16,6 +16,8 @@ class ProductsController < ApplicationController
 	def update
 		@product = Product.find(params[:id])
 		@product.buyer_id = params[:product][:buyer_id]
+		#QUESTION: Should above line be this instead:
+		#@product.buyer_id = current_user
 		if @product.save
 			redirect_to user_url(current_user),
 				:notice => "#{@product.name} purchased!"
